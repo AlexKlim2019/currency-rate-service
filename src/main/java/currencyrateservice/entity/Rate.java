@@ -11,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -23,14 +24,18 @@ public class Rate {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column
     private String currency;
 
-    @Column(table = "base_currency")
+    @Column(name = "base_currency")
     private String baseCurrency;
 
-    @Column(table = "sale_rate")
+    @Column(name = "sale_rate")
     private BigDecimal saleRate;
 
-    @Column(table = "purchase_rate")
+    @Column(name = "purchase_rate")
     private BigDecimal purchaseRate;
+
+    @Column(name = "updated_date")
+    private LocalDateTime updatedDate;
 }
