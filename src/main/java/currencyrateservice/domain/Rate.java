@@ -1,5 +1,6 @@
 package currencyrateservice.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,6 +21,7 @@ import java.time.LocalDateTime;
 @Table(name = "rates")
 public class Rate {
 
+    @JsonIgnore
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -36,6 +38,7 @@ public class Rate {
     @Column(name = "purchase_rate")
     private BigDecimal purchaseRate;
 
+    @JsonIgnore
     @Column(name = "updated_date")
     private LocalDateTime updatedDate;
 }
