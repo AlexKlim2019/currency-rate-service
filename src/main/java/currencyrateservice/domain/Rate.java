@@ -1,4 +1,4 @@
-package currencyrateservice.entity;
+package currencyrateservice.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
