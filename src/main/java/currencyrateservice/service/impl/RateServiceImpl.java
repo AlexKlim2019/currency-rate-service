@@ -1,7 +1,7 @@
 package currencyrateservice.service.impl;
 
-import currencyrateservice.domain.Rate;
-import currencyrateservice.repository.RateRepository;
+import currencyrateservice.domain.ExchangeRate;
+import currencyrateservice.repository.ExchangeRateRepository;
 import currencyrateservice.service.RateService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -10,10 +10,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class RateServiceImpl implements RateService {
 
-    private final RateRepository repository;
+    private final ExchangeRateRepository repository;
 
     @Override
-    public Rate findByCurrency(String currency) {
+    public ExchangeRate findByCurrency(String currency) {
         return repository.findByCurrency(currency);
     }
 }

@@ -2,6 +2,7 @@ package currencyrateservice.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -18,8 +19,9 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Table(name = "rates")
-public class Rate {
+public class ExchangeRate {
 
     @JsonIgnore
     @Id
