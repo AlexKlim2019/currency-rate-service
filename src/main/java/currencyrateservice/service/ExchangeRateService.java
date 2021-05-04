@@ -2,6 +2,6 @@ package currencyrateservice.service;
 
 import currencyrateservice.domain.ExchangeRate;
 
-public interface RateService {
+public interface ExchangeRateService {
     ExchangeRate findByCurrency(String currency);
 }
