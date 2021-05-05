@@ -1,18 +1,20 @@
 package currencyrateservice.service.impl;
 
+import currencyrateservice.config.Constants.LogMessage;
 import currencyrateservice.domain.ExchangeRate;
 import currencyrateservice.domain.model.ExchangeRateModel;
 import currencyrateservice.repository.ExchangeRateRepository;
 import currencyrateservice.service.CurrencyDataService;
 import currencyrateservice.service.ExchangeRateService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-
+@Slf4j
 @AllArgsConstructor
 @Service
 public class ExchangeRateServiceImpl implements ExchangeRateService {
@@ -23,13 +25,13 @@ public class ExchangeRateServiceImpl implements ExchangeRateService {
 
     @Override
     public ExchangeRate findByCurrency(String currency) {
-        //Log
+        log.info(LogMessage.IN_FIND_BY_CURRENCY, currency);
+
         Optional<ExchangeRate> rate = repository.findByCurrency(currency);
-        LocalDate now = LocalDate.now().plusWeeks(1); // delete after test
         if (rate.isEmpty()) {
             ExchangeRate newRate = createNewRate(currency);
             return updateOrPopulateRate(newRate);
-        } else if (now.compareTo(LocalDate.now()) > 0) {
+        } else if (isOldRateFromDb(rate)) {
             return updateOrPopulateRate(rate.get());
         }
         return rate.get();
@@ -48,5 +50,10 @@ public class ExchangeRateServiceImpl implements ExchangeRateService {
                 .currency(currency)
                 .updatedDate(LocalDateTime.now())
                 .build();
+    }
+
+    private boolean isOldRateFromDb(Optional<ExchangeRate> rateDataFromDb) {
+        LocalDate dbRateDate = rateDataFromDb.get().getUpdatedDate().toLocalDate();
+        return dbRateDate.compareTo(LocalDate.now()) > 0;
     }
 }

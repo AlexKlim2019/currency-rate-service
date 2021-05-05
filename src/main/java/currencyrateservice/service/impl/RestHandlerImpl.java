@@ -1,8 +1,12 @@
 package currencyrateservice.service.impl;
 
+import currencyrateservice.config.Constants.Pattern;
+import currencyrateservice.config.Constants.Param;
+import currencyrateservice.config.Constants.LogMessage;
 import currencyrateservice.exception.ExternalDataSourceException;
 import currencyrateservice.service.RestHandler;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -14,7 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.time.format.DateTimeFormatter;
@@ -23,16 +26,10 @@ import java.util.Map;
 
 import static java.time.LocalDateTime.now;
 
-
+@Slf4j
 @NoArgsConstructor
 @Service
 public class RestHandlerImpl implements RestHandler {
-
-    private static final String DATE_PATTERN = "dd.MM.yyyy";
-
-    private static final String JSON_PARAM = "json";
-
-    private static final String DATE_PARAM = "date";
 
     @Value("${network.bank-data-url}")
     private String bankDataUrl;
@@ -47,6 +44,8 @@ public class RestHandlerImpl implements RestHandler {
 
     @Override
     public ResponseEntity<String> doGet() {
+        log.debug(LogMessage.IN_DO_GET);
+
         HttpHeaders requestHeaders = createRequestHeaders();
         HttpEntity<String> requestEntity = new HttpEntity<>(requestHeaders);
         Map<String, String> params = populateParams();
@@ -71,14 +70,14 @@ public class RestHandlerImpl implements RestHandler {
     }
 
     private String getCurrentDate() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_PATTERN);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Pattern.DATE);
         return now().format(formatter);
     }
 
     private Map<String, String> populateParams() {
         Map<String, String> result = new HashMap<>();
-        result.put(JSON_PARAM, null);
-        result.put(DATE_PARAM, getCurrentDate());
+        result.put(Param.JSON, null);
+        result.put(Param.DATE, getCurrentDate());
 
         return result;
     }

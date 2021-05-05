@@ -1,5 +1,6 @@
 package currencyrateservice.service.impl;
 
+import currencyrateservice.config.Constants.LogMessage;
 import currencyrateservice.config.Constants.ErrorMessage;
 import currencyrateservice.domain.model.BankDataModel;
 import currencyrateservice.domain.model.ExchangeRateModel;
@@ -8,9 +9,12 @@ import currencyrateservice.service.CurrencyDataService;
 import currencyrateservice.service.JsonParser;
 import currencyrateservice.service.RestHandler;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
+@Slf4j
 @AllArgsConstructor
 @Service
 public class PBCurrencyDataService implements CurrencyDataService {
@@ -21,7 +25,8 @@ public class PBCurrencyDataService implements CurrencyDataService {
 
     @Override
     public ExchangeRateModel getRateModelByCurrency(String currency){
-        //Log
+        log.info(LogMessage.IN_GET_RATE_MODEL_BY_CURRENCY, currency);
+
         String currencyDateJson = handler.doGet().getBody();
         List<ExchangeRateModel> rates = receiveCurrencyDataFromJson(currencyDateJson);
 
