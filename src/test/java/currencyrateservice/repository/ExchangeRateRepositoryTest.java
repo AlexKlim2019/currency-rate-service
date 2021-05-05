@@ -42,7 +42,7 @@ class ExchangeRateRepositoryTest {
     @Test
     void shouldReturnExistingExchangeRateByCurrency() {
         ExchangeRate expected = entityManager.persistAndFlush(exchangeRate);
-        ExchangeRate actual = repository.findByCurrency(CURRENCY);
+        ExchangeRate actual = repository.findByCurrency(CURRENCY).get();
         assertThat(actual).isEqualTo(expected);
     }
 

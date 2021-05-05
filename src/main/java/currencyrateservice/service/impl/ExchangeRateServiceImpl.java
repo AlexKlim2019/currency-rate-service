@@ -5,11 +5,12 @@ import currencyrateservice.domain.model.ExchangeRateModel;
 import currencyrateservice.repository.ExchangeRateRepository;
 import currencyrateservice.service.CurrencyDataService;
 import currencyrateservice.service.ExchangeRateService;
-import javassist.NotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Optional;
 
 
 @AllArgsConstructor
@@ -22,17 +23,30 @@ public class ExchangeRateServiceImpl implements ExchangeRateService {
 
     @Override
     public ExchangeRate findByCurrency(String currency) {
-        ExchangeRate rate = repository.findByCurrency(currency);
-        if (rate.getUpdatedDate().toLocalDate().compareTo(LocalDate.now()) < 0) {
-            try {
-                ExchangeRateModel rateModel = service.getRateModelByCurrency(currency);
-                rate.setSaleRate(rateModel.getSaleRate());
-                rate.setPurchaseRate(rateModel.getPurchaseRate());
-                return repository.saveAndFlush(rate);
-            } catch (NotFoundException e) {
-                e.printStackTrace();
-            }
+        //Log
+        Optional<ExchangeRate> rate = repository.findByCurrency(currency);
+        LocalDate now = LocalDate.now().plusWeeks(1); // delete after test
+        if (rate.isEmpty()) {
+            ExchangeRate newRate = createNewRate(currency);
+            return updateOrPopulateRate(newRate);
+        } else if (now.compareTo(LocalDate.now()) > 0) {
+            return updateOrPopulateRate(rate.get());
         }
-        return repository.findByCurrency(currency);
+        return rate.get();
+    }
+
+    private ExchangeRate updateOrPopulateRate(ExchangeRate rawRate) {
+            ExchangeRateModel rateModel = service.getRateModelByCurrency(rawRate.getCurrency());
+            rawRate.setSaleRate(rateModel.getSaleRate());
+            rawRate.setPurchaseRate(rateModel.getPurchaseRate());
+            rawRate.setBaseCurrency(rateModel.getBaseCurrency());
+            return repository.saveAndFlush(rawRate);
+    }
+
+    private ExchangeRate createNewRate(String currency) {
+        return ExchangeRate.builder()
+                .currency(currency)
+                .updatedDate(LocalDateTime.now())
+                .build();
     }
 }

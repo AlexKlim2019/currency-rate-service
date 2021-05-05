@@ -1,7 +1,9 @@
 package currencyrateservice.service.impl;
 
+import currencyrateservice.exception.ExternalDataSourceException;
 import currencyrateservice.service.RestHandler;
-import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -9,7 +11,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestOperations;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
@@ -21,7 +24,7 @@ import java.util.Map;
 import static java.time.LocalDateTime.now;
 
 
-@AllArgsConstructor
+@NoArgsConstructor
 @Service
 public class RestHandlerImpl implements RestHandler {
 
@@ -31,24 +34,34 @@ public class RestHandlerImpl implements RestHandler {
 
     private static final String DATE_PARAM = "date";
 
-    @Value(value = "network.bank-data-url")
-    private final String bankDataUrl;
+    @Value("${network.bank-data-url}")
+    private String bankDataUrl;
 
-    private final RestOperations rest;
+    private RestTemplate restTemplate;
+
+    @Autowired
+    public RestHandlerImpl(
+            RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
 
     @Override
     public ResponseEntity<String> doGet() {
-
         HttpHeaders requestHeaders = createRequestHeaders();
         HttpEntity<String> requestEntity = new HttpEntity<>(requestHeaders);
         Map<String, String> params = populateParams();
         URI requestUrlWithParams = buildRequestUriWithParams(bankDataUrl, params);
 
-        return rest.exchange(
-                requestUrlWithParams,
-                HttpMethod.GET,
-                requestEntity,
-                String.class);
+        try {
+            return restTemplate.exchange(
+                    requestUrlWithParams,
+                    HttpMethod.GET,
+                    requestEntity,
+                    String.class);
+        } catch (RestClientException exception) {
+            throw new ExternalDataSourceException(exception.getMessage());
+        }
+
     }
 
     private HttpHeaders createRequestHeaders() {

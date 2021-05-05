@@ -11,7 +11,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestOperations;
+import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
 
@@ -29,13 +29,13 @@ class RestHandlerImpTest {
     private static final String EXTERNAL_URL = "https://api.privatbank.ua/p24api/exchange_rates";
 
     @Mock
-    private RestOperations restMock;
+    private RestTemplate restMock;
 
     private RestHandler restHandler;
 
     @BeforeEach
     void setUp() {
-        restHandler = new RestHandlerImpl(EXTERNAL_URL, restMock);
+        restHandler = new RestHandlerImpl(restMock);
     }
 
     @Test
