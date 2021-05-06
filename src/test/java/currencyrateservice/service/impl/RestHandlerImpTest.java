@@ -18,6 +18,8 @@ import java.net.URI;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -35,7 +37,7 @@ class RestHandlerImpTest {
 
     @BeforeEach
     void setUp() {
-        restHandler = new RestHandlerImpl(restMock);
+        restHandler = new RestHandlerImpl(EXTERNAL_URL, restMock);
     }
 
     @Test
@@ -51,6 +53,11 @@ class RestHandlerImpTest {
 
         ResponseEntity<String> result = restHandler.doGet();
 
-        assertThat(result).isSameAs(expected);
+        assertThat(result).isEqualTo(expected);
+        verify(restMock, times(1))
+                .exchange(any(URI.class),
+                    eq(HttpMethod.GET),
+                    any(HttpEntity.class),
+                    eq(String.class));
     }
 }

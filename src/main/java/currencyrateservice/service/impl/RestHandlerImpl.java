@@ -1,11 +1,10 @@
 package currencyrateservice.service.impl;
 
-import currencyrateservice.config.Constants.Pattern;
-import currencyrateservice.config.Constants.Param;
 import currencyrateservice.config.Constants.LogMessage;
+import currencyrateservice.config.Constants.Param;
+import currencyrateservice.config.Constants.Pattern;
 import currencyrateservice.exception.ExternalDataSourceException;
 import currencyrateservice.service.RestHandler;
-import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.time.format.DateTimeFormatter;
@@ -27,18 +27,18 @@ import java.util.Map;
 import static java.time.LocalDateTime.now;
 
 @Slf4j
-@NoArgsConstructor
 @Service
 public class RestHandlerImpl implements RestHandler {
 
-    @Value("${network.bank-data-url}")
-    private String bankDataUrl;
+    private final String bankDataUrl;
 
-    private RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
 
     @Autowired
     public RestHandlerImpl(
+            @Value("${network.bank-data-url}")String bankDataUrl,
             RestTemplate restTemplate) {
+        this.bankDataUrl = bankDataUrl;
         this.restTemplate = restTemplate;
     }
 

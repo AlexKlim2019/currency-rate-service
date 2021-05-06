@@ -3,6 +3,7 @@ package currencyrateservice.domain;
 import currencyrateservice.domain.security.Role;
 import currencyrateservice.domain.security.Status;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -19,6 +20,7 @@ import javax.persistence.Table;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Table(name = "users")
 public class User {
     @Id
