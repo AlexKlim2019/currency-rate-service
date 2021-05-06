@@ -26,12 +26,6 @@ public class GlobalRestExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
     }
 
-    @ExceptionHandler(JsonParsingException.class)
-    public ResponseEntity<Object> handleUsernameNotFoundException(UsernameNotFoundException exception) {
-        log.debug(exception.getMessage());
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(exception.getMessage());
-    }
-
     @ExceptionHandler(ExternalDataSourceException.class)
     public ResponseEntity<Object> handleExternalDataSourceException(ExternalDataSourceException exception) {
         log.debug(exception.getMessage());
@@ -42,5 +36,11 @@ public class GlobalRestExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleJsonParsingException(JsonParsingException exception) {
         log.debug(exception.getMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(exception.getMessage());
+    }
+
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<Object> handleUsernameNotFoundException(UsernameNotFoundException exception) {
+        log.debug(exception.getMessage());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(exception.getMessage());
     }
 }

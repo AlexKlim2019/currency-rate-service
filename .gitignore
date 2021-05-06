@@ -48,4 +48,4 @@ build/
 .vscode/
 
 ### Logging ###
-*.log
+/logs/

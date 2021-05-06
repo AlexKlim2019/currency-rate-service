@@ -50,6 +50,8 @@ public final class Constants {
 
         public static final String JSON_PARSING_EXCEPTION = "Fail to parse json string:[%s] to object of type [%s]";
 
+        public static final String USERNAME_NOT_FOUND_EXCEPTION = "Username %s not found";
+
         private ErrorMessage() {
         }
     }

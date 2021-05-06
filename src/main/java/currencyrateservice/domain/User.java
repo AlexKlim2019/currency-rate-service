@@ -1,11 +1,15 @@
 package currencyrateservice.domain;
 
+import currencyrateservice.domain.security.Role;
+import currencyrateservice.domain.security.Status;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -32,4 +36,12 @@ public class User {
 
     @Column
     private String password;
+
+    @Enumerated(value = EnumType.STRING)
+    @Column
+    private Role role;
+
+    @Enumerated(value = EnumType.STRING)
+    @Column
+    private Status status;
 }
