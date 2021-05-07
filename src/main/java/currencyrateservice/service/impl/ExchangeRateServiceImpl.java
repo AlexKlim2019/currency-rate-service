@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -23,6 +24,7 @@ public class ExchangeRateServiceImpl implements ExchangeRateService {
 
     private final CurrencyDataService service;
 
+    @Transactional
     @Override
     public ExchangeRate findByCurrency(String currency) {
         log.info(LogMessage.IN_FIND_BY_CURRENCY, currency);
